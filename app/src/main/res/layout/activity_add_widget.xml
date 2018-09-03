@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".AddWidgetActivity">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/widgetDescription"
+        android:textStyle="italic"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/symbol"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="24sp"/>
+    <EditText
+        android:id="@+id/et_symbol"
+        android:layout_width="120dp"
+        android:maxLines="1"
+        android:inputType="textCapCharacters"
+        android:hint="GOOG"
+        android:textAllCaps="true"
+        android:gravity="center"
+        android:imeOptions="actionGo"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/tv_wrong_symbol"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/invalidSymbol"
+        android:visibility="invisible"
+        android:textColor="@color/colorError"
+        android:gravity="center"
+        android:textStyle="italic|bold"
+        android:textSize="16sp"/>
+
+    <Button
+        android:id="@+id/btn_addWidget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@color/colorAccent"
+        android:padding="10dp"
+        android:layout_gravity="center"
+        android:text="@string/addWidget"
+        android:textSize="24sp"
+        />
+
+</LinearLayout>
