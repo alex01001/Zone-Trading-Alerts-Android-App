@@ -52,6 +52,10 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
 
     public static final int RC_SIGN_IN = 1;
 
+    public static final String CHART_URL = "chart_url";
+    public static final String SYMBOL = "symbol";
+
+
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -358,7 +362,8 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
         Context context = MainActivity.this;
         Class detActivity = ChartActivity.class;
         Intent intent = new Intent(getApplicationContext(),detActivity);
-//        intent.putExtra("alert", alertList.get(ClickedItemIndex));
+        intent.putExtra(CHART_URL, alertList.get(ClickedItemIndex).getChartURL());
+        intent.putExtra(SYMBOL, alertList.get(ClickedItemIndex).getSymbol());
         startActivity(intent);
 
     }
