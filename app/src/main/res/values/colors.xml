@@ -7,4 +7,11 @@
     <color name="colorError">#FF0000</color>
     <color name="colorGreen">#4CAF50</color>
 
+    <color name="background">#222222</color>
+    <color name="colorText">#FFFFFF</color>
+
+    <color name="colorDarkGreen">#2F4F4F</color>
+
+
+
 </resources>
