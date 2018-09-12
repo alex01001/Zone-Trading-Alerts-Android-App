@@ -2,6 +2,7 @@ package com.stocksbuyalerts.alexey.zonetradingalerts;
 
 public class Alert {
     private String symbol;
+    private String name;
     private String chartURL;
     private String alertID;
     private String time;
@@ -16,6 +17,14 @@ public class Alert {
 //        this.timeStr = timeStr;
 //        this.price = price;
 //    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getPrice() {
         return price;

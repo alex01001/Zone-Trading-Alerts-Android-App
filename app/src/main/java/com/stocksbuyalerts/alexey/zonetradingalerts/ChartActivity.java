@@ -64,6 +64,9 @@ public class ChartActivity extends AppCompatActivity {
 
             WebView myWebView = (WebView) findViewById(R.id.wv_chart);
 
+//            myWebView.clearCache(true);
+//            myWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+
             Display display = getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);

@@ -29,13 +29,16 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_weight="1"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:ellipsize="end"
+            android:maxEms="5"
 
-
-            android:fontFamily="sans-serif-condensed"
-            android:gravity="left"
-            android:text="AA"
+            android:fontFamily="@font/eczar_medium"
+            android:layout_gravity="start|center"
+            android:text="WWWW"
             android:textColor="@color/colorText"
-            android:textSize="36sp" />
+            android:textSize="28sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -45,32 +48,42 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_alertDateTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Jul 15, 11:23"
-                android:textColor="@color/colorText"
-                android:textSize="20sp" />
-
-
-            <TextView
                 android:id="@+id/tv_alertPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="at $14.86"
+                android:maxLines="1"
+                android:fontFamily="@font/eczar_medium"
+                android:layout_marginTop="8dp"
                 android:textColor="@color/colorText"
                 android:textSize="20sp"
-
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_alertDateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="sans-serif-condensed"
+                android:maxLines="1"
+                android:text="Jul 15, 11:23"
+                android:textColor="@color/colorText"
+                android:textSize="18sp" />
+
+
 
 
         </LinearLayout>
 
         <ImageView
-            android:layout_width="160dp"
+            android:id="@+id/iv_thumbnail"
+            android:layout_width="150dp"
             android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
             android:src="@drawable/thumbnail" />
 
     </LinearLayout>

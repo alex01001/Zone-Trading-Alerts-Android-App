@@ -1,5 +1,6 @@
 package com.stocksbuyalerts.alexey.zonetradingalerts;
 
+import android.app.ActionBar;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.content.res.Configuration;
 import android.graphics.Movie;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -22,10 +24,12 @@ import com.google.firebase.auth.FirebaseUser;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,7 +52,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements AlertAdapter.AlertItemClickListener, LoaderManager.LoaderCallbacks<String>{
+public class MainActivity extends AppCompatActivity implements AlertAdapter.AlertItemClickListener{
 
     public static final int RC_SIGN_IN = 1;
 
@@ -86,6 +90,11 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_alertsList);
 
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+
+        actionBar.setLogo(R.mipmap.ic_launcher_round);
 
         FirebaseMessaging.getInstance().subscribeToTopic("alerts")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -96,13 +105,22 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
                             msg = "msg_subscribe_failed";
                         }
                         Log.d("zzz", msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
 
 // setting up adapter
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
 
-        adapter = new AlertAdapter(getBaseContext(), this);
+        if(width>1600){
+            adapter = new AlertAdapter(getBaseContext(), this, true);
+        }
+        else {
+            adapter = new AlertAdapter(getBaseContext(), this, false);
+        }
+
         adapter.setAlertData(alertList);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
@@ -110,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
 
 // connecting to database
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-//        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("Alerts");
         mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("Alerts");
 
 // managing authentication
@@ -122,70 +139,17 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null){
-                    Toast.makeText(MainActivity.this, "signed in",Toast.LENGTH_SHORT).show();
-
-
-
-//                    mChildEventListener = new ChildEventListener() {
-//                        @Override
-//                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                            Log.i("xxz", s);
-//                            Toast.makeText(MainActivity.this, "message event!",Toast.LENGTH_SHORT).show();
-//
-//                        }
-//
-//                        @Override
-//                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//                            Log.w("zzz", "Failed to read value.", databaseError.toException());
-//
-//                        }
-//                    };
-//                    mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
-
-
-//                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-//                    DatabaseReference myRef = database.getReference();//.child("Alerts");
+//                    Toast.makeText(MainActivity.this, "signed in",Toast.LENGTH_SHORT).show();
 
                     FirebaseDatabase database = mFirebaseDatabase;
                     DatabaseReference myRef = mMessagesDatabaseReference;
-
-
-//                    mFirebaseDatabase = FirebaseDatabase.getInstance();
-//                    mMessagesDatabaseReference = database.getReference().child("Alerts");
-
-                  //  myRef.setValue("Hello, World!");
 
                     // Read from the database
 
                     myRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            // This method is called once with the initial value and again
-                            // whenever data at this location is updated.
-//                            String value = dataSnapshot.getValue(String.class);
-//                            Log.d("zzz", "Value is: " + value);
-//                            Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-//
-//                            for (int i=0; children)
-                            Toast.makeText(MainActivity.this, "message event!",Toast.LENGTH_SHORT).show();
-
-//                            Alert alert = dataSnapshot.getValue(Alert.class);
-//                            Log.w("zzz", alert.toString());
+//                            Toast.makeText(MainActivity.this, "message event!",Toast.LENGTH_SHORT).show();
 
                             alertList = new ArrayList<Alert>();
 
@@ -193,8 +157,6 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
                                 Alert alert = ds.getValue(Alert.class);
                                 Log.w("zzz", alert.toString());
                                 alertList.add(alert);
-                                //adapter.data.add(alert);
-
 
                             }
                             Collections.reverse(alertList);
@@ -227,33 +189,6 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
             }
         };
 
-
-
-
-
-
-
-
-        //        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-//        if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-//            mRecyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
-//        }
-//        else{
-//            mRecyclerView.setLayoutManager(new GridLayoutManager(getBaseContext(), 2));
-//        }
-        // avoid reloading the movie list from the internet on device rotate
-
-//        if(savedInstanceState!=null){
-//            movieList = savedInstanceState.getParcelableArrayList("MOVIE_LIST");
-//            adapter.setMovieData(movieList);
-//            showPosterGrid();
-//        }
-//        else{
-//            makeSearchQuery();
-//        }
-
-      //  makeSearchQuery();
     }
 
     // check if we are connected to the network
@@ -293,10 +228,7 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
                 Toast.makeText(MainActivity.this, "Signed in cancelled!",Toast.LENGTH_SHORT).show();
                 finish();
             }
-
         }
-
-
     }
 
     @Override
@@ -341,30 +273,22 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
         }
     }
 
-    @Override
-    public Loader<String> onCreateLoader(int id, Bundle args) {
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<String> loader, String data) {
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<String> loader) {
-
-    }
-
-    @Override
+     @Override
     public void onAlertItemClick(int ClickedItemIndex) {
-
         Context context = MainActivity.this;
         Class detActivity = ChartActivity.class;
         Intent intent = new Intent(getApplicationContext(),detActivity);
         intent.putExtra(CHART_URL, alertList.get(ClickedItemIndex).getChartURL());
-        intent.putExtra(SYMBOL, alertList.get(ClickedItemIndex).getSymbol());
+        intent.putExtra(SYMBOL, alertList.get(ClickedItemIndex).getSymbol() + " - " + alertList.get(ClickedItemIndex).getTimeStr());
         startActivity(intent);
+    }
 
+
+    public void perform_action(View v)
+    {
+        String url = "http://www.stocksbuyalerts.com";
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
     }
 }
