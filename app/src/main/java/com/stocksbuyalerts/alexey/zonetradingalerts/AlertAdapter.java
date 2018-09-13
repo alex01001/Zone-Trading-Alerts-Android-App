@@ -48,7 +48,6 @@ public class AlertAdapter extends RecyclerView.Adapter <AlertAdapter.MyViewHolde
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-
         Alert current = data.get(position);
         holder.alertDate.setText(current.getTimeStr());
         if(wideScreen) {
@@ -59,16 +58,10 @@ public class AlertAdapter extends RecyclerView.Adapter <AlertAdapter.MyViewHolde
             else {
                 holder.alertSymbol.setText(Html.fromHtml("<b>"+ current.getSymbol() + "</b>"));
             }
-
             holder.alertPrice.setTextSize(TypedValue.COMPLEX_UNIT_SP,34);
-
             double newWidth = (holder.tumbnail.getLayoutParams().width*1.2);
-
-//            holder.tumbnail.getLayoutParams().width =  (int) newWidth;
-//            holder.tumbnail.getLayoutParams().width = 180;
             holder.tumbnail.getLayoutParams().width = (int) context.getResources().getDimension(R.dimen.large_thumbnail_width);
             holder.tumbnail.requestLayout();
-
         }
         else {
             holder.alertSymbol.setText(current.getSymbol());
@@ -76,14 +69,6 @@ public class AlertAdapter extends RecyclerView.Adapter <AlertAdapter.MyViewHolde
         holder.alertPrice.setText("$"+current.getPrice());
 
         String thumbnailURL = current.getChartURL().replace(".html", ".png");
-//        String thumbnailURL = "http://www.stocksbuyalerts.com/charts/2018_07_13_10_45_AMD_m.png";
-
-//        URL url = null;
-//        try {
-//            url = new URL(thumbnailURL);
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
 
         Picasso.get()
                 .load(thumbnailURL)
@@ -91,12 +76,6 @@ public class AlertAdapter extends RecyclerView.Adapter <AlertAdapter.MyViewHolde
                 .error(R.drawable.thumbnail)
                 .into(holder.tumbnail);
 
-//        URL posterURL = NetworkTools.buildPosterUrl(current.getPosterPath());
-//        Picasso.with(context).load(posterURL.toString()).resize(185,277).centerCrop().into(holder.posterImg);
-//
-//        ViewGroup.LayoutParams lp;
-//        lp = holder.posterImg.getLayoutParams();
-//        lp.height = 270*Resources.getSystem().getDisplayMetrics().widthPixels/(2*185)-16;
     }
     public void setAlertData (List<Alert> mData){
         data = mData;

@@ -55,21 +55,17 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements AlertAdapter.AlertItemClickListener{
 
     public static final int RC_SIGN_IN = 1;
-
     public static final String CHART_URL = "chart_url";
     public static final String SYMBOL = "symbol";
-
+    private static final String TAG = "SBA_msg";
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessagesDatabaseReference;
-    private ChildEventListener mChildEventListener;
 
-
-
-    private RecyclerView mRecyclerView;
+//    private RecyclerView mRecyclerView;
     private AlertAdapter adapter;
     public List<Alert> alertList;
 //    TextView errorMessageTextView;
@@ -77,8 +73,9 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
 
 
     @BindView(R.id.tv_error_message_diaplay) TextView errorMessageTextView;
-    @BindView(R.id.pb_loading_indicator) ProgressBar mLoadingIndicator;
-//    @BindView(R.id.rv_alertsList) RecyclerView mRecyclerView;
+    @BindView(R.id.rv_alertsList) RecyclerView mRecyclerView;
+    @BindView(R.id.tv_link) TextView tvLink;
+
 
 
     @Override
@@ -88,14 +85,12 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
         alertList = new ArrayList<Alert>();
         ButterKnife.bind(this);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_alertsList);
-
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-
         actionBar.setLogo(R.mipmap.ic_launcher_round);
 
+//subscribing to notifications
         FirebaseMessaging.getInstance().subscribeToTopic("alerts")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -103,9 +98,8 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
                         String msg = "msg_subscribed";
                         if (!task.isSuccessful()) {
                             msg = "msg_subscribe_failed";
+                            //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                         }
-                        Log.d("zzz", msg);
-                        //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -125,70 +119,65 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
 
-
 // connecting to database
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("Alerts");
 
-// managing authentication
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
+        if(isOnline()) {
+            errorMessageTextView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+            tvLink.setVisibility(View.VISIBLE);
 
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if(user != null){
-//                    Toast.makeText(MainActivity.this, "signed in",Toast.LENGTH_SHORT).show();
+            // managing authentication
+            mFirebaseAuth = FirebaseAuth.getInstance();
+            mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user != null) {
+                        FirebaseDatabase database = mFirebaseDatabase;
+                        DatabaseReference myRef = mMessagesDatabaseReference;
 
-                    FirebaseDatabase database = mFirebaseDatabase;
-                    DatabaseReference myRef = mMessagesDatabaseReference;
-
-                    // Read from the database
-
-                    myRef.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-//                            Toast.makeText(MainActivity.this, "message event!",Toast.LENGTH_SHORT).show();
-
-                            alertList = new ArrayList<Alert>();
-
-                            for(DataSnapshot ds: dataSnapshot.getChildren()){
-                                Alert alert = ds.getValue(Alert.class);
-                                Log.w("zzz", alert.toString());
-                                alertList.add(alert);
-
+                        // Read from the database
+                        myRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                alertList = new ArrayList<Alert>();
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    Alert alert = ds.getValue(Alert.class);
+                                    alertList.add(alert);
+                                }
+                                Collections.reverse(alertList);
+                                adapter.setAlertData(alertList);
                             }
-                            Collections.reverse(alertList);
-                            adapter.setAlertData(alertList);
 
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError error) {
-                            // Failed to read value
-                            Log.w("zzz", "Failed to read value.", error.toException());
-                        }
-                    });
-
-
+                            @Override
+                            public void onCancelled(DatabaseError error) {
+                                // Failed to read value
+                                Log.w(TAG, "Failed to read value.", error.toException());
+                            }
+                        });
+                    } else {
+                        startActivityForResult(
+                                AuthUI.getInstance()
+                                        .createSignInIntentBuilder()
+                                        .setIsSmartLockEnabled(false)
+                                        .setAvailableProviders(Arrays.asList(
+                                                new AuthUI.IdpConfig.EmailBuilder().build()))
+                                        .setTosAndPrivacyPolicyUrls("http://www.stocksbuyalerts.com/disclaimer/",
+                                                "http://www.stocksbuyalerts.com/disclaimer/")
+                                        .build(),
+                                RC_SIGN_IN);
+                    }
                 }
-                else{
-
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    .setIsSmartLockEnabled(false)
-                                    .setAvailableProviders(Arrays.asList(
-                                            new AuthUI.IdpConfig.EmailBuilder().build()))
-                                    .setTosAndPrivacyPolicyUrls("http://www.stocksbuyalerts.com/disclaimer/",
-                                            "http://www.stocksbuyalerts.com/disclaimer/")
-                                    .build(),
-                            RC_SIGN_IN);
-                }
-            }
-        };
-
+            };
+        }
+        else{
+            errorMessageTextView.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+            tvLink.setVisibility(View.GONE);
+        }
     }
 
     // check if we are connected to the network
@@ -199,33 +188,15 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-
-    private void makeSearchQuery() {
-            if (isOnline()) {
-//                String searchResults = null;
-//                Bundle queryBundle = new Bundle();
-//                queryBundle.putString("query", "LOAD_FROM_DB");
-//                LoaderManager loaderManager = getSupportLoaderManager();
-//                Loader<String> queryLoader = loaderManager.getLoader(FAVORITES_LOADER_ID);
-//
-//                if (queryLoader == null) {
-//                    loaderManager.initLoader(FAVORITES_LOADER_ID, queryBundle, this);
-//                } else {
-//                    loaderManager.restartLoader(FAVORITES_LOADER_ID, queryBundle, this);
-//                }
-            }
-    }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == RC_SIGN_IN){
             if(resultCode==RESULT_OK){
-                Toast.makeText(MainActivity.this, "Signed in!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.signed_in,Toast.LENGTH_SHORT).show();
             }
             else if (resultCode==RESULT_CANCELED){
-                Toast.makeText(MainActivity.this, "Signed in cancelled!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.error_signing_in,Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
@@ -255,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
         switch (item.getItemId()){
             case R.id.sign_out_menu:
                 AuthUI.getInstance().signOut(this);
-                Toast.makeText(MainActivity.this, "Signed Out",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.signed_out,Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.add_widget_menu:
@@ -263,13 +234,10 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
                 Class detActivity = AddWidgetActivity.class;
                 Intent intent = new Intent(getApplicationContext(),detActivity);
                 startActivity(intent);
-
-
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
@@ -282,7 +250,6 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
         intent.putExtra(SYMBOL, alertList.get(ClickedItemIndex).getSymbol() + " - " + alertList.get(ClickedItemIndex).getTimeStr());
         startActivity(intent);
     }
-
 
     public void perform_action(View v)
     {

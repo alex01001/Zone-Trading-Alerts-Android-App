@@ -28,48 +28,26 @@ public class PriceTrackingWidget extends AppWidgetProvider {
     static void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
-        // Construct the RemoteViews object
-//        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.price_tracking_widget);
-//        views.setTextViewText(R.id.appwidget_text, widgetText);
-
-
-
-
         String symbol = Utils.loadSymbol(context);
-        Log.i("xxx", symbol);
 
         if (symbol != null) {
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0);
-
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.price_tracking_widget);
-
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-
             Query query = reference.child("Prices").orderByKey().equalTo(symbol);
-
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        // dataSnapshot is the "issue" node with all children with id 0
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            Log.i("xxxds", ds.toString());
-
                             String ask = ds.child("ask").getValue().toString();
                             String open = ds.child("open").getValue().toString();
                             String time = ds.child("time").getValue().toString();
-
-                            Log.i("xxx ask", ask);
 
                             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
                             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, PriceTrackingWidget.class));
 
                             PriceTrackingWidget.updateAppWidgets(context, appWidgetManager, appWidgetIds, ask, open, time);
-
-                          //  views.setTextViewText(R.id.tv_price, ask);
-
-
                         }
                     }
                 }
@@ -79,38 +57,21 @@ public class PriceTrackingWidget extends AppWidgetProvider {
 
                 }
             });
-
-
             views.setTextViewText(R.id.tv_symbol, symbol);
-            views.setTextViewText(R.id.tv_price, "XXX");
-
+            views.setTextViewText(R.id.tv_price, "");
             views.setOnClickPendingIntent(R.id.tv_symbol, pendingIntent);
 
             Intent intent = new Intent(context, MyWidgetService.class);
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
 
-//            views.setRemoteAdapter(R.id.recipe_widget_listview, intent);
-
             appWidgetManager.updateAppWidget(appWidgetId, views);
-//            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.recipe_widget_listview);
         }
-
-
-
-
-
-
-
-        // Instruct the widget manager to update the widget
-//        appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
 
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, String tAsk, String tOpen, String tTime) {
-
-        CharSequence widgetText = context.getString(R.string.appwidget_text);
 
         final String symbol = Utils.loadSymbol(context);
 
@@ -133,12 +94,7 @@ public class PriceTrackingWidget extends AppWidgetProvider {
                 views.setTextColor(R.id.tv_percent_change,  ContextCompat.getColor(context, R.color.colorError));
             }
 
-//            views.setTextViewText(R.id.tv_price, "$"+ String.format("%.2g%n", ask));
-//            views.setTextViewText(R.id.tv_percent_change, String.format("%.2g%n", change)+"%");
             views.setTextViewText(R.id.tv_update_time, "as of " + tTime);
-
-
-
             views.setOnClickPendingIntent(R.id.tv_symbol, pendingIntent);
 
             Intent intent = new Intent(context, MyWidgetService.class);
@@ -160,7 +116,6 @@ public class PriceTrackingWidget extends AppWidgetProvider {
     public static void updateAppWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
-            Log.i("xxx", "updateAppWidgets: ");
         }
     }
 
@@ -169,7 +124,6 @@ public class PriceTrackingWidget extends AppWidgetProvider {
             updateAppWidget(context, appWidgetManager, appWidgetId, tAsk, tOpen, tTime);
         }
     }
-
 
     @Override
     public void onEnabled(Context context) {

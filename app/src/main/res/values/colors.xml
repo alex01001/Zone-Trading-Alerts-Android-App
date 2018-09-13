@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#06224A</color>
-    <!--<color name="colorPrimary">#3F51B5</color>-->
     <color name="colorPrimaryDark">#045D56</color>
-    <!--<color name="colorPrimaryDark">#303F9F</color>-->
-
-
-
     <color name="colorAccent">#FF4081</color>
-
     <color name="colorError">#FF0000</color>
     <color name="colorGreen">#4CAF50</color>
-
     <color name="background">#222222</color>
     <color name="colorText">#FFFFFF</color>
-
     <color name="colorDarkGreen">#2F4F4F</color>
-
     <color name="colorLightGreen">#1EB980</color>
-
 
 </resources>

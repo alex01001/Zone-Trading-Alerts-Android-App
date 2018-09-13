@@ -13,7 +13,6 @@ public final class Utils {
     public static void saveSymbol(Context context, String symbol) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
         prefs.putString(context.getString(R.string.widget_symbol_key), symbol);
-
         prefs.apply();
     }
 
@@ -22,7 +21,6 @@ public final class Utils {
         String symbolBase64 = prefs.getString(context.getString(R.string.widget_symbol_key), "");
 
         return symbolBase64;
-//        return "".equals(symbolBase64) ? null : String.fromBase64(prefs.getString(context.getString(R.string.widget_recipe_key), ""));
     }
 
 

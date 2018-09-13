@@ -44,7 +44,6 @@ public class AddWidgetActivity extends AppCompatActivity {
     EditText vSymbol;
     @BindView(R.id.btn_addWidget)
     Button btnAddWidget;
-
     @BindView(R.id.tv_wrong_symbol)
     TextView tvErrorMessage;
 
@@ -56,8 +55,6 @@ public class AddWidgetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_widget);
         ButterKnife.bind(this);
-
-//        btn = (Button) findViewById(R.id.btn_addWidget);
 
         btnAddWidget.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,19 +69,15 @@ public class AddWidgetActivity extends AppCompatActivity {
                 }
 
                 if(symbolList.contains(symbol)){
-
                     tvErrorMessage.setVisibility(View.INVISIBLE);
                     MyWidgetService.updateWidget(getBaseContext(), symbol);
-                    Toast.makeText(AddWidgetActivity.this, "Added " + symbol, Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(AddWidgetActivity.this, "Symbol " + symbol +" added to homescreen widget!", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     tvErrorMessage.setText(R.string.invalidSymbol);
                     tvErrorMessage.setVisibility(View.VISIBLE);
                     return;
                 }
-
-
             }
         });
 
@@ -96,9 +89,7 @@ public class AddWidgetActivity extends AppCompatActivity {
 // managing authentication
 
         mFirebaseAuth = FirebaseAuth.getInstance();
-
-        Toast.makeText(AddWidgetActivity.this, "signed in",Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(AddWidgetActivity.this, R.string.signed_in,Toast.LENGTH_SHORT).show();
         FirebaseDatabase database = mFirebaseDatabase;
         DatabaseReference myRef = mMessagesDatabaseReference;
 
@@ -107,12 +98,8 @@ public class AddWidgetActivity extends AppCompatActivity {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(AddWidgetActivity.this, " mmmessage event!",Toast.LENGTH_SHORT).show();
-
                 symbolList = new ArrayList<String>();
-
                 for(DataSnapshot ds: dataSnapshot.getChildren()){
-//                    String s = ds.getValue(String.class);
                     String s = ds.getKey();
                     Log.w(TAG, s);
                     symbolList.add(s);
@@ -121,10 +108,8 @@ public class AddWidgetActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
-
     }
 }

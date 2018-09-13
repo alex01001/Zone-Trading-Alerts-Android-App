@@ -1,21 +1,19 @@
 <resources>
     <string name="app_name">Zone Trading Alerts</string>
     <string name="sign_out">Sign Out</string>
-
+    <string name="signed_out">Signed Out</string>
+    <string name="signed_in">You Signed In!</string>
+    <string name="error_signing_in">Error Signing in!</string>
     <string name="errorMessage">Can't load Alerts</string>
-
     <string name="widgetDescription">Here you can create a home sreen widget which will display price of the stock you select. The price will be updated every 15 minutes. </string>
     <string name="symbol">Enter SYMBOL</string>
-
     <string name="addWidget">Add Widget</string>
     <string name="invalidSymbol">Invalid Symbol</string>
-
     <string name="isOffline">Your device is offline. Please try again later. </string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
-
     <string name="select_symbol">Select a stock to track</string>
-
     <string name="widget_symbol_key">widget_symbol_key</string>
+    <string name="sba_invite">For more charts visit stocksbuyalerts.com</string>
 
 </resources>

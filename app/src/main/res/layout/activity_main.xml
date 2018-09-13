@@ -1,78 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorDarkGreen">
 
-
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorDarkGreen"
-    tools:context="com.stocksbuyalerts.alexey.zonetradingalerts.MainActivity">
-
-
-
-
-    <TextView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/tv_error_message_diaplay"
-        android:textSize="22sp"
-        android:padding="16dp"
-        android:text = "@string/errorMessage"
-        android:visibility="gone"/>
+        android:background="@color/colorDarkGreen"
+        android:orientation="vertical"
+        tools:context="com.stocksbuyalerts.alexey.zonetradingalerts.MainActivity">
 
+        <TextView
+            android:id="@+id/tv_error_message_diaplay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:text="@string/errorMessage"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="22sp"
+            android:textColor="@color/colorText"
+            android:visibility="gone" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_alertsList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:visibility="visible" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_alertsList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:visibility="visible" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_marginTop="8dp"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/darker_gray" />
 
-            <TextView
-                android:id="@+id/tv_link"
+        <TextView
+            android:id="@+id/tv_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="18dp"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:maxLines="1"
+            android:onClick="perform_action"
+            android:text="@string/sba_invite"
+            android:textColor="@color/colorText"
+            android:textSize="20sp" />
 
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:maxLines="1"
-
-                android:fontFamily="sans-serif-condensed"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="For more charts visit stocksbuyalerts.com"
-
-                android:textColor="@color/colorText"
-                android:textSize="20sp"
-                android:onClick="perform_action"
-                />
-
-
-        <!--app:stackFromEnd="true"-->
-        <!--app:reverseLayout="true"/>-->
-
-    <ProgressBar
-        android:id="@+id/pb_loading_indicator"
-        android:layout_gravity="center"
-        android:visibility="invisible"
-        android:layout_width="42dp"
-        android:layout_height="42dp" />
-
-</LinearLayout>
+    </LinearLayout>
 </ScrollView>

@@ -9,14 +9,6 @@ public class Alert {
     private String timeStr;
     private String price;
 
-//    public Alert(String symbol, String chartURL, String alertID, String time, String timeStr, String price) {
-//        this.symbol = symbol;
-//        this.chartURL = chartURL;
-//        this.alertID = alertID;
-//        this.time = time;
-//        this.timeStr = timeStr;
-//        this.price = price;
-//    }
 
     public String getName() {
         return name;
