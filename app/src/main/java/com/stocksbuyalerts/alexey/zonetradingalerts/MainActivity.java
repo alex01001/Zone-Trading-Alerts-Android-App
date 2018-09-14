@@ -61,22 +61,15 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessagesDatabaseReference;
 
-//    private RecyclerView mRecyclerView;
     private AlertAdapter adapter;
     public List<Alert> alertList;
-//    TextView errorMessageTextView;
-//    ProgressBar mLoadingIndicator;
-
 
     @BindView(R.id.tv_error_message_diaplay) TextView errorMessageTextView;
     @BindView(R.id.rv_alertsList) RecyclerView mRecyclerView;
     @BindView(R.id.tv_link) TextView tvLink;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

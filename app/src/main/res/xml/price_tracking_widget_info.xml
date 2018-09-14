@@ -3,7 +3,7 @@
     android:initialKeyguardLayout="@layout/price_tracking_widget"
     android:initialLayout="@layout/price_tracking_widget"
     android:minHeight="40dp"
-    android:minWidth="180dp"
+    android:minWidth="240dp"
     android:previewImage="@drawable/example_appwidget_preview"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="864000"

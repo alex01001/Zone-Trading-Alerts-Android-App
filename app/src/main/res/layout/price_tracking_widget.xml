@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorDarkGreenTrans"
     android:orientation="vertical"
     android:padding="@dimen/widget_margin">
 
@@ -8,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+
         android:padding="@dimen/widget_margin">
 
         <TextView
@@ -16,6 +18,7 @@
             android:layout_height="match_parent"
             android:layout_margin="4dp"
             android:text="@string/select_symbol"
+            android:textColor="@color/colorText"
             android:textSize="24sp"
             android:textStyle="bold|italic" />
 
@@ -24,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="4dp"
+            android:textColor="@color/colorText"
             android:text=""
             android:textSize="24sp"
             android:textStyle="bold|italic" />
@@ -45,6 +49,7 @@
         android:id="@+id/tv_update_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorText"
         android:layout_marginLeft="8dp"
         android:text=""/>
 </LinearLayout>

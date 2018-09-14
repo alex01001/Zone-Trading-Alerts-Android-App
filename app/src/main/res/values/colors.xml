@@ -8,6 +8,7 @@
     <color name="background">#222222</color>
     <color name="colorText">#FFFFFF</color>
     <color name="colorDarkGreen">#2F4F4F</color>
+    <color name="colorDarkGreenTrans">#802F4F4F</color>
     <color name="colorLightGreen">#1EB980</color>
 
 </resources>
