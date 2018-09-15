@@ -158,8 +158,8 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
                                         .setIsSmartLockEnabled(false)
                                         .setAvailableProviders(Arrays.asList(
                                                 new AuthUI.IdpConfig.EmailBuilder().build()))
-                                        .setTosAndPrivacyPolicyUrls("http://www.stocksbuyalerts.com/disclaimer/",
-                                                "http://www.stocksbuyalerts.com/disclaimer/")
+                                        .setTosAndPrivacyPolicyUrls(getString(R.string.privacy_policy_url),
+                                                getString(R.string.privacy_policy_url))
                                         .build(),
                                 RC_SIGN_IN);
                     }
@@ -184,27 +184,34 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RC_SIGN_IN){
-            if(resultCode==RESULT_OK){
-                Toast.makeText(MainActivity.this, R.string.signed_in,Toast.LENGTH_SHORT).show();
-            }
-            else if (resultCode==RESULT_CANCELED){
-                Toast.makeText(MainActivity.this, R.string.error_signing_in,Toast.LENGTH_SHORT).show();
-                finish();
+        if(isOnline()) {
+            if (requestCode == RC_SIGN_IN) {
+                if (resultCode == RESULT_OK) {
+                    Toast.makeText(MainActivity.this, R.string.signed_in, Toast.LENGTH_SHORT).show();
+                } else if (resultCode == RESULT_CANCELED) {
+                    Toast.makeText(MainActivity.this, R.string.error_signing_in, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
             }
         }
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+        if(mFirebaseAuth!=null) {
+            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+        }
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+        if(mFirebaseAuth!=null) {
+            mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+        }
     }
 
     @Override
@@ -216,6 +223,9 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(!isOnline()){
+            return false;
+        }
         switch (item.getItemId()){
             case R.id.sign_out_menu:
                 AuthUI.getInstance().signOut(this);

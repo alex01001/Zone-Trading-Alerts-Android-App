@@ -4,7 +4,7 @@
     <string name="signed_out">Signed Out</string>
     <string name="signed_in">You Signed In!</string>
     <string name="error_signing_in">Error Signing in!</string>
-    <string name="errorMessage">Can't load Alerts</string>
+    <string name="errorMessage">Unable to load Alerts. Please verify Internet connection and try again.</string>
     <string name="widgetDescription">Here you can create a home sreen widget which will display price of the stock you select. The price will be updated every 15 minutes. </string>
     <string name="symbol">Enter SYMBOL</string>
     <string name="addWidget">Add Widget</string>
@@ -16,4 +16,5 @@
     <string name="widget_symbol_key">widget_symbol_key</string>
     <string name="sba_invite">For more charts visit stocksbuyalerts.com</string>
 
+    <string name="privacy_policy_url">http://www.stocksbuyalerts.com/disclaimer/</string>
 </resources>

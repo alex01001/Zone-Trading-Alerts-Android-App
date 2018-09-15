@@ -1,5 +1,8 @@
 package com.stocksbuyalerts.alexey.zonetradingalerts;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -53,8 +56,13 @@ public class AddWidgetActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(!isOnline()){
+            finish();
+        }
+
         setContentView(R.layout.activity_add_widget);
         ButterKnife.bind(this);
+
 
         btnAddWidget.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +79,7 @@ public class AddWidgetActivity extends AppCompatActivity {
                 if(symbolList.contains(symbol)){
                     tvErrorMessage.setVisibility(View.INVISIBLE);
                     MyWidgetService.updateWidget(getBaseContext(), symbol);
-                    Toast.makeText(AddWidgetActivity.this, "Symbol " + symbol +" added to homescreen widget!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddWidgetActivity.this, "Symbol " + symbol +" added to home screen widget!", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     tvErrorMessage.setText(R.string.invalidSymbol);
@@ -89,7 +97,6 @@ public class AddWidgetActivity extends AppCompatActivity {
 // managing authentication
 
         mFirebaseAuth = FirebaseAuth.getInstance();
-        Toast.makeText(AddWidgetActivity.this, R.string.signed_in,Toast.LENGTH_SHORT).show();
         FirebaseDatabase database = mFirebaseDatabase;
         DatabaseReference myRef = mMessagesDatabaseReference;
 
@@ -112,4 +119,12 @@ public class AddWidgetActivity extends AppCompatActivity {
             }
         });
     }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
 }

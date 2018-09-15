@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-
+        android:layout_gravity="center"
+        android:gravity="center"
         android:padding="@dimen/widget_margin">
 
         <TextView
@@ -50,6 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/colorText"
+        android:gravity="center"
         android:layout_marginLeft="8dp"
         android:text=""/>
 </LinearLayout>
