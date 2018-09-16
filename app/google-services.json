@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "37172624888",
+    "firebase_url": "https://sbatest-b6cc2.firebaseio.com",
+    "project_id": "sbatest-b6cc2",
+    "storage_bucket": "sbatest-b6cc2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37172624888:android:e7fe772e07b2615c",
+        "android_client_info": {
+          "package_name": "com.stocksbuyalerts.alexey.zonetradingalerts"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "37172624888-4gpkohuqk4gnossiie564gcivbp1bh01.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stocksbuyalerts.alexey.zonetradingalerts",
+            "certificate_hash": "707f6e33e83b6ccdb513f6884b9e681bf743cc47"
+          }
+        },
+        {
+          "client_id": "37172624888-gev7nndrmrsdjg86itu44bte4ahspvbk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMc4AjVJMkPD_OKKt6kWt2fFgJp712IuY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "37172624888-gev7nndrmrsdjg86itu44bte4ahspvbk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
