@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/add_widget_menu"
-        android:title="Add Price Tracking Widget"
+        android:title="@string/menu_add_widget"
         app:showAsAction="never"/>
 
     <item

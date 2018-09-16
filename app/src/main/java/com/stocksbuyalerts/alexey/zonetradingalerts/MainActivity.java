@@ -1,25 +1,17 @@
 package com.stocksbuyalerts.alexey.zonetradingalerts;
 
-import android.app.ActionBar;
-import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.Loader;
-import android.content.res.Configuration;
-import android.graphics.Movie;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,13 +22,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,15 +34,27 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements AlertAdapter.AlertItemClickListener{
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+public class MainActivity extends AppCompatActivity implements AlertAdapter.AlertItemClickListener, NewsAdapter.NewsItemClickListener{
 
     public static final int RC_SIGN_IN = 1;
     public static final String CHART_URL = "chart_url";
@@ -67,8 +69,12 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
     private AlertAdapter adapter;
     public List<Alert> alertList;
 
+    private NewsAdapter newsAdapter;
+    public List<News> newsList;
+
     @BindView(R.id.tv_error_message_diaplay) TextView errorMessageTextView;
     @BindView(R.id.rv_alertsList) RecyclerView mRecyclerView;
+    @BindView(R.id.rv_news_list) RecyclerView mRecyclerViewNews;
     @BindView(R.id.tv_link) TextView tvLink;
 
     @Override
@@ -108,9 +114,16 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
             adapter = new AlertAdapter(getBaseContext(), this, false);
         }
 
+
         adapter.setAlertData(alertList);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+
+        newsAdapter = new NewsAdapter(getBaseContext(), this, true);
+        newsAdapter.setNewsData(newsList);
+        mRecyclerViewNews.setAdapter(newsAdapter);
+        mRecyclerViewNews.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+
 
 // connecting to database
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -118,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
 
 
         if(isOnline()) {
+            makeNewsQuery();
             errorMessageTextView.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
             tvLink.setVisibility(View.VISIBLE);
@@ -243,6 +257,21 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
                 return super.onOptionsItemSelected(item);
         }
     }
+    private void makeNewsQuery() {
+        if(isOnline()) {
+            URL newsURL = null;
+            try{
+                newsURL = new URL(getString(R.string.news_feed_url));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            String searchResults = null;
+            if(newsURL!=null) {
+                new NewsQueryTask().execute(newsURL);
+            }
+        }
+    }
 
      @Override
     public void onAlertItemClick(int ClickedItemIndex) {
@@ -261,4 +290,109 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
         i.setData(Uri.parse(url));
         startActivity(i);
     }
+
+    @Override
+    public void onNewsItemClick(int ClickedItemIndex) {
+
+        String url = newsList.get(ClickedItemIndex).getLink();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
+
+    }
+
+
+    public class NewsQueryTask extends AsyncTask<URL, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(URL... urls) {
+            URL searchUrl = urls[0];
+            String searchResults = null;
+            try {
+
+                HttpURLConnection urlConnection = (HttpURLConnection) searchUrl.openConnection();
+                try {
+                    InputStream in = urlConnection.getInputStream();
+                    Scanner scanner = new Scanner(in);
+                    scanner.useDelimiter("\\A");
+                    boolean hasInput = scanner.hasNext();
+                    if (hasInput) {
+                        return scanner.next();
+                    } else {
+                        return null;
+                    }
+                } finally {
+                    urlConnection.disconnect();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return searchResults;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if(s==null){
+                return;
+            }
+             // parsing the response.
+
+            XmlPullParserFactory parserFactory;
+            try {
+                parserFactory = XmlPullParserFactory.newInstance();
+                XmlPullParser parser = parserFactory.newPullParser();
+                InputStream is = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+                parser.setInput(is, null);
+
+                 processParsing(parser);
+
+            } catch (XmlPullParserException e) {
+
+            }
+             catch (IOException e) {
+            }
+
+        }
+    }
+
+    private void processParsing(XmlPullParser parser) throws IOException, XmlPullParserException{
+        newsList = new ArrayList<>();
+        int eventType = parser.getEventType();
+        News current = null;
+
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            String eltName = null;
+
+            switch (eventType) {
+                case XmlPullParser.START_TAG:
+                    eltName = parser.getName();
+
+                    if ("item".equals(eltName)) {
+                        current = new News();
+                        newsList.add(current);
+                    } else if (current != null) {
+                        if ("description".equals(eltName)) {
+                            current.setDescription(parser.nextText());
+                        } else if ("pubDate".equals(eltName)) {
+                            current.setPubDate(parser.nextText());
+                        } else if ("link".equals(eltName)) {
+                            current.setLink(parser.nextText());
+                        } else if ("title".equals(eltName)) {
+                            current.setTitle(parser.nextText());
+                        }
+                        Log.i(TAG, current.toString());
+                    }
+                    break;
+            }
+
+            eventType = parser.next();
+        }
+        newsAdapter.setNewsData(newsList);
+    }
+
 }

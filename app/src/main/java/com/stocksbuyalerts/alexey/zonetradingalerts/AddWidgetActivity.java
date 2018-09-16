@@ -3,20 +3,16 @@ package com.stocksbuyalerts.alexey.zonetradingalerts;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,12 +21,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.stocksbuyalerts.alexey.zonetradingalerts.widget.MyWidgetService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class AddWidgetActivity extends AppCompatActivity {
 
@@ -50,6 +45,30 @@ public class AddWidgetActivity extends AppCompatActivity {
     @BindView(R.id.tv_wrong_symbol)
     TextView tvErrorMessage;
 
+    @OnClick(R.id.btn_addWidget)
+    public void submit() {
+        String symbol = vSymbol.getText().toString().trim();
+        symbol = symbol.toUpperCase();
+
+        if(symbol==""){
+            tvErrorMessage.setText(R.string.invalidSymbol);
+            tvErrorMessage.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        if(symbolList.contains(symbol)){
+            tvErrorMessage.setVisibility(View.INVISIBLE);
+            MyWidgetService.updateWidget(getBaseContext(), symbol);
+            Toast.makeText(AddWidgetActivity.this, String.format(getResources().getString(R.string.symbol_added_to_widget), symbol), Toast.LENGTH_SHORT).show();
+        }
+        else{
+            tvErrorMessage.setText(R.string.invalidSymbol);
+            tvErrorMessage.setVisibility(View.VISIBLE);
+            return;
+        }
+    }
+
+
     private List<String> symbolList;
 
 
@@ -63,31 +82,30 @@ public class AddWidgetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_widget);
         ButterKnife.bind(this);
 
-
-        btnAddWidget.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String symbol = vSymbol.getText().toString().trim();
-                symbol = symbol.toUpperCase();
-
-                if(symbol==""){
-                    tvErrorMessage.setText(R.string.invalidSymbol);
-                    tvErrorMessage.setVisibility(View.VISIBLE);
-                    return;
-                }
-
-                if(symbolList.contains(symbol)){
-                    tvErrorMessage.setVisibility(View.INVISIBLE);
-                    MyWidgetService.updateWidget(getBaseContext(), symbol);
-                    Toast.makeText(AddWidgetActivity.this, "Symbol " + symbol +" added to home screen widget!", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    tvErrorMessage.setText(R.string.invalidSymbol);
-                    tvErrorMessage.setVisibility(View.VISIBLE);
-                    return;
-                }
-            }
-        });
+//        btnAddWidget.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String symbol = vSymbol.getText().toString().trim();
+//                symbol = symbol.toUpperCase();
+//
+//                if(symbol==""){
+//                    tvErrorMessage.setText(R.string.invalidSymbol);
+//                    tvErrorMessage.setVisibility(View.VISIBLE);
+//                    return;
+//                }
+//
+//                if(symbolList.contains(symbol)){
+//                    tvErrorMessage.setVisibility(View.INVISIBLE);
+//                    MyWidgetService.updateWidget(getBaseContext(), symbol);
+//                    Toast.makeText(AddWidgetActivity.this, "Symbol " + symbol +" added to home screen widget!", Toast.LENGTH_SHORT).show();
+//                }
+//                else{
+//                    tvErrorMessage.setText(R.string.invalidSymbol);
+//                    tvErrorMessage.setVisibility(View.VISIBLE);
+//                    return;
+//                }
+//            }
+//        });
 
 
 // connecting to database
@@ -108,7 +126,7 @@ public class AddWidgetActivity extends AppCompatActivity {
                 symbolList = new ArrayList<String>();
                 for(DataSnapshot ds: dataSnapshot.getChildren()){
                     String s = ds.getKey();
-                    Log.w(TAG, s);
+//                    Log.w(TAG, s);
                     symbolList.add(s);
                 }
             }

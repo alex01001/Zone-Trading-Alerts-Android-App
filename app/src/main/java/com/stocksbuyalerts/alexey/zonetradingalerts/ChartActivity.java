@@ -1,6 +1,5 @@
 package com.stocksbuyalerts.alexey.zonetradingalerts;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.support.v4.view.MenuItemCompat;
@@ -9,12 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 //import android.widget.ShareActionProvider;

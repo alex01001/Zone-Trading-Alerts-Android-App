@@ -15,6 +15,16 @@
     <string name="select_symbol">Select a stock to track</string>
     <string name="widget_symbol_key">widget_symbol_key</string>
     <string name="sba_invite">For more charts visit stocksbuyalerts.com</string>
-
     <string name="privacy_policy_url">http://www.stocksbuyalerts.com/disclaimer/</string>
+    <string name="news_feed_url">https://feeds.finance.yahoo.com/rss/2.0/headline?s=SPY,DJI,IXI,QQQ,DIA</string>
+    <string name="symbol_added_to_widget">Symbol %1$s added to home screen widget!</string>
+    <string name="headlines">Market Headlines</string>
+    <string name="mini_chart">Mini Chart</string>
+    <string name="menu_add_widget">Add Price Tracking Widget</string>
+    <string name="menu_sign_out">Sign Out</string>
+    <string name="share">Share</string>
+    <string name="symbol_hint">GOOG</string>
+
+
+
 </resources>

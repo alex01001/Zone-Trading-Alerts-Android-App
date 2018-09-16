@@ -3,9 +3,6 @@ package com.stocksbuyalerts.alexey.zonetradingalerts.widget;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
-import android.widget.RemoteViewsService;
 
 public class MyWidgetService  {
     public static void updateWidget(Context context, String symbol) {

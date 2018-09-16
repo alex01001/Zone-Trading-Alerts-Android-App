@@ -16,18 +16,14 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:background="@color/colorDarkGreen"
-        android:gravity="right"
-
-
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tv_alertSymbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:maxLines="1"
             android:scrollHorizontally="true"
@@ -36,7 +32,7 @@
 
             android:fontFamily="@font/eczar_medium"
             android:layout_gravity="start|center"
-            android:text="WWWW"
+            android:text="SYMB"
             android:textColor="@color/colorText"
             android:textSize="28sp" />
 
@@ -72,9 +68,6 @@
                 android:textColor="@color/colorText"
                 android:textSize="18sp" />
 
-
-
-
         </LinearLayout>
 
         <ImageView
@@ -84,7 +77,8 @@
             android:scaleType="fitXY"
             android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
-            android:src="@drawable/thumbnail" />
+            android:src="@drawable/thumbnail"
+            android:contentDescription="@string/mini_chart" />
 
     </LinearLayout>
 

@@ -31,7 +31,7 @@
         android:layout_width="120dp"
         android:maxLines="1"
         android:inputType="textCapCharacters"
-        android:hint="GOOG"
+        android:hint="@string/symbol_hint"
         android:textAllCaps="true"
         android:gravity="center"
         android:imeOptions="actionGo"
