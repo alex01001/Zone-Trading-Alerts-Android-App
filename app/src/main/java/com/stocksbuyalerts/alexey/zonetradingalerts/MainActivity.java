@@ -2,11 +2,13 @@ package com.stocksbuyalerts.alexey.zonetradingalerts;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
@@ -122,12 +124,16 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels;
+        Log.i("yyyy", String.valueOf(width));
 
         if(width>1600){
-            adapter = new AlertAdapter(getBaseContext(), this, true);
+            adapter = new AlertAdapter(getBaseContext(), this, 3);
         }
         else {
-            adapter = new AlertAdapter(getBaseContext(), this, false);
+            if (width>500)
+                adapter = new AlertAdapter(getBaseContext(), this, 2);
+            else
+                adapter = new AlertAdapter(getBaseContext(), this, 1);
         }
 
 
@@ -241,14 +247,11 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
     @Override
     protected void onPause() {
         super.onPause();
-//        mScrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-//        Log.i(TAG, "onPause:" + String.valueOf(mScrollPosition));
         mListState = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).onSaveInstanceState();
 
         if(mFirebaseAuth!=null) {
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
-
     }
 
     @Override
@@ -302,14 +305,22 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
     }
 
      @Override
-    public void onAlertItemClick(int ClickedItemIndex, ImageView tumbnail) {
+    public void onAlertItemClick(int ClickedItemIndex, TextView symbol) {
         Class detActivity = ChartActivity.class;
         Intent intent = new Intent(getApplicationContext(),detActivity);
         intent.putExtra(CHART_URL, alertList.get(ClickedItemIndex).getChartURL());
         intent.putExtra(SYMBOL, alertList.get(ClickedItemIndex).getSymbol() + " - " + alertList.get(ClickedItemIndex).getTimeStr());
         View clickedView = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findViewByPosition(ClickedItemIndex);
-        startActivity(intent);
-    }
+
+         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+             ActivityOptionsCompat options = ActivityOptionsCompat.
+                     makeSceneTransitionAnimation(this, (View)symbol, "profile");
+
+             startActivity(intent, options.toBundle());
+
+         }else
+             startActivity(intent);
+     }
 
     public void perform_action(View v)
     {

@@ -2,6 +2,7 @@ package com.stocksbuyalerts.alexey.zonetradingalerts;
 
 import android.content.Intent;
 import android.graphics.Point;
+import android.os.Build;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import android.webkit.WebView;
 //import android.support.v4.view.MenuItemCompat;
 //import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
+import android.widget.TextView;
 
 public class ChartActivity extends AppCompatActivity {
     private ShareActionProvider mShareActionProvider;
@@ -28,6 +30,7 @@ public class ChartActivity extends AppCompatActivity {
 
     private String url;
     private String symbol;
+    private TextView tvTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +52,11 @@ public class ChartActivity extends AppCompatActivity {
         if (intent.hasExtra(CHART_URL) && intent.hasExtra(SYMBOL)) {
             url = getIntent().getStringExtra(CHART_URL);
             symbol = getIntent().getStringExtra(SYMBOL);
+            tvTitle = (TextView) findViewById(R.id.tv_symb);
 
             if (actionBar != null) {
-                actionBar.setTitle(symbol);
+                actionBar.setTitle("");
+                tvTitle.setText(symbol);
             }
 
             toolbar.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -77,6 +82,14 @@ public class ChartActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
 //        myWebView.clearCache(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            tvTitle.setTransitionName("");
+            getWindow().setReenterTransition(null);
+            getWindow().setSharedElementReenterTransition(null);
+            getWindow().setReturnTransition(null);
+            getWindow().setSharedElementReturnTransition(null);
+        }
         onBackPressed();
         return true;
     }

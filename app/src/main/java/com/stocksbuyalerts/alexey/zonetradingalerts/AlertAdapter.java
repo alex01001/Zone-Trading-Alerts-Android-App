@@ -1,13 +1,16 @@
 package com.stocksbuyalerts.alexey.zonetradingalerts;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -22,13 +25,13 @@ public class AlertAdapter extends RecyclerView.Adapter <AlertAdapter.MyViewHolde
     private List<Alert> data = Collections.emptyList();
     private Context context;
 
-    private boolean wideScreen;
+    private int wideScreen; // 1 = narrow screen; 2= regular; 3 = wide
 
     public interface AlertItemClickListener {
-        void onAlertItemClick(int ClickedItemIndex, ImageView tumbnail);
+        void onAlertItemClick(int ClickedItemIndex, TextView symbol);
     }
 
-    public AlertAdapter (Context tContext, AlertItemClickListener listener, boolean tWideScreen){
+    public AlertAdapter (Context tContext, AlertItemClickListener listener, int tWideScreen){
         context = tContext;
         inflater = LayoutInflater.from(tContext);
         onClickListener = listener;
@@ -47,7 +50,7 @@ public class AlertAdapter extends RecyclerView.Adapter <AlertAdapter.MyViewHolde
 
         Alert current = data.get(position);
         holder.alertDate.setText(current.getTimeStr());
-        if(wideScreen) {
+        if(wideScreen==3) {
             String commpanyName = current.getName();
             if (!commpanyName.equals("")){
                 holder.alertSymbol.setText(Html.fromHtml("<b>"+ current.getSymbol() + "</b> - " + commpanyName));
@@ -59,11 +62,19 @@ public class AlertAdapter extends RecyclerView.Adapter <AlertAdapter.MyViewHolde
             double newWidth = (holder.tumbnail.getLayoutParams().width*1.2);
             holder.tumbnail.getLayoutParams().width = (int) context.getResources().getDimension(R.dimen.large_thumbnail_width);
             holder.tumbnail.requestLayout();
+            holder.tumbnail.setVisibility(View.VISIBLE);
         }
         else {
+            if(wideScreen==1)
+                holder.tumbnail.setVisibility(View.GONE);
+            else
+                holder.tumbnail.setVisibility(View.VISIBLE);
+
             holder.alertSymbol.setText(current.getSymbol());
+
         }
         holder.alertPrice.setText("$"+current.getPrice());
+
 
         String thumbnailURL = current.getChartURL().replace(".html", ".png");
 
@@ -91,11 +102,12 @@ public class AlertAdapter extends RecyclerView.Adapter <AlertAdapter.MyViewHolde
         private TextView alertSymbol;
         private TextView alertPrice;
         private ImageView tumbnail;
+        private LinearLayout card;
 
         @Override
         public void onClick(View view) {
             int clickedPosition = getAdapterPosition();
-            onClickListener.onAlertItemClick(clickedPosition,tumbnail);
+            onClickListener.onAlertItemClick(clickedPosition,alertSymbol);
         }
 
 
@@ -105,6 +117,7 @@ public class AlertAdapter extends RecyclerView.Adapter <AlertAdapter.MyViewHolde
             alertSymbol = (TextView) itemView.findViewById(R.id.tv_alertSymbol);
             alertPrice = (TextView) itemView.findViewById(R.id.tv_alertPrice);
             tumbnail = (ImageView) itemView.findViewById(R.id.iv_thumbnail);
+            card = (LinearLayout) itemView.findViewById(R.id.linear_layout);
             itemView.setOnClickListener(this);
         }
     }

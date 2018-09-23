@@ -82,32 +82,6 @@ public class AddWidgetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_widget);
         ButterKnife.bind(this);
 
-//        btnAddWidget.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String symbol = vSymbol.getText().toString().trim();
-//                symbol = symbol.toUpperCase();
-//
-//                if(symbol==""){
-//                    tvErrorMessage.setText(R.string.invalidSymbol);
-//                    tvErrorMessage.setVisibility(View.VISIBLE);
-//                    return;
-//                }
-//
-//                if(symbolList.contains(symbol)){
-//                    tvErrorMessage.setVisibility(View.INVISIBLE);
-//                    MyWidgetService.updateWidget(getBaseContext(), symbol);
-//                    Toast.makeText(AddWidgetActivity.this, "Symbol " + symbol +" added to home screen widget!", Toast.LENGTH_SHORT).show();
-//                }
-//                else{
-//                    tvErrorMessage.setText(R.string.invalidSymbol);
-//                    tvErrorMessage.setVisibility(View.VISIBLE);
-//                    return;
-//                }
-//            }
-//        });
-
-
 // connecting to database
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("Prices");

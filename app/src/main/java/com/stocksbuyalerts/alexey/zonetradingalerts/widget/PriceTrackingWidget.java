@@ -55,7 +55,7 @@ public class PriceTrackingWidget extends AppWidgetProvider {
 
                 }
             });
-            views.setTextViewText(R.id.tv_symbol, symbol);
+            //views.setTextViewText(R.id.tv_symbol, symbol);
             views.setTextViewText(R.id.tv_price, "");
             views.setOnClickPendingIntent(R.id.tv_symbol, pendingIntent);
 

@@ -20,8 +20,17 @@
             android:id="@+id/detail_toolbar"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+        <TextView
+            android:id="@+id/tv_symb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:transitionName="profile"
+            android:text="AAPL"
+            android:fontFamily="sans-serif-condensed"
+            android:textSize="16sp"
+            android:textColor="@color/colorText" />
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 

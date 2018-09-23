@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
-
     android:background="@color/colorDarkGreen"
     android:clickable="true"
     android:focusable="true"
@@ -14,6 +13,7 @@
     card_view:cardPreventCornerOverlap="false">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorDarkGreen"
@@ -29,6 +29,7 @@
             android:scrollHorizontally="true"
             android:ellipsize="end"
             android:maxEms="5"
+            android:transitionName="profile"
             android:fontFamily="@font/eczar_medium"
             android:layout_gravity="start|center"
             android:text=""
