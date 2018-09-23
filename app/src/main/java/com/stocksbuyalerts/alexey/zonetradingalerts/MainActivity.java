@@ -2,11 +2,18 @@ package com.stocksbuyalerts.alexey.zonetradingalerts;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
+import android.support.transition.Explode;
+import android.support.transition.Transition;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -22,6 +29,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
@@ -45,6 +55,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 import butterknife.BindView;
@@ -56,10 +67,11 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 public class MainActivity extends AppCompatActivity implements AlertAdapter.AlertItemClickListener, NewsAdapter.NewsItemClickListener{
 
-    public static final int RC_SIGN_IN = 1;
-    public static final String CHART_URL = "chart_url";
-    public static final String SYMBOL = "symbol";
+    private static final int RC_SIGN_IN = 1;
+    private static final String CHART_URL = "chart_url";
+    private static final String SYMBOL = "symbol";
     private static final String TAG = "SBA_msg";
+    private static final String LIST_STATE_KEY = "list_pos";
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -67,10 +79,12 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
     private DatabaseReference mMessagesDatabaseReference;
 
     private AlertAdapter adapter;
-    public List<Alert> alertList;
+    private List<Alert> alertList;
 
-    private NewsAdapter newsAdapter;
-    public List<News> newsList;
+    private static NewsAdapter newsAdapter;
+    private static List<News> newsList;
+    private LinearLayoutManager layoutManager;
+    public Parcelable mListState;
 
     @BindView(R.id.tv_error_message_diaplay) TextView errorMessageTextView;
     @BindView(R.id.rv_alertsList) RecyclerView mRecyclerView;
@@ -78,16 +92,18 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
     @BindView(R.id.tv_link) TextView tvLink;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         alertList = new ArrayList<Alert>();
         ButterKnife.bind(this);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayUseLogoEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setLogo(R.mipmap.ic_launcher_round);
+        if (actionBar != null) {
+            actionBar.setDisplayUseLogoEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setLogo(R.mipmap.ic_launcher_round);
+        }
 
 //subscribing to notifications
         FirebaseMessaging.getInstance().subscribeToTopic("alerts")
@@ -122,7 +138,8 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
         newsAdapter = new NewsAdapter(getBaseContext(), this, true);
         newsAdapter.setNewsData(newsList);
         mRecyclerViewNews.setAdapter(newsAdapter);
-        mRecyclerViewNews.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+        layoutManager = new LinearLayoutManager(getBaseContext());
+        mRecyclerViewNews.setLayoutManager(layoutManager);
 
 
 // connecting to database
@@ -157,6 +174,16 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
                                 }
                                 Collections.reverse(alertList);
                                 adapter.setAlertData(alertList);
+
+                                if (savedInstanceState != null) {
+                                    mListState = savedInstanceState.getParcelable(LIST_STATE_KEY);
+                                    ((LinearLayoutManager) mRecyclerView.getLayoutManager()).onRestoreInstanceState(mListState);
+                                }
+                                LayoutAnimationController controller;
+                                controller = AnimationUtils.loadLayoutAnimation(getBaseContext(), R.anim.layout_fall_down);
+                                mRecyclerView.setLayoutAnimation(controller);
+                                mRecyclerView.getAdapter().notifyDataSetChanged();
+                                mRecyclerView.scheduleLayoutAnimation();
                             }
 
                             @Override
@@ -191,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        NetworkInfo netInfo = Objects.requireNonNull(cm).getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
@@ -214,6 +241,10 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
     @Override
     protected void onPause() {
         super.onPause();
+//        mScrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+//        Log.i(TAG, "onPause:" + String.valueOf(mScrollPosition));
+        mListState = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).onSaveInstanceState();
+
         if(mFirebaseAuth!=null) {
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
@@ -247,7 +278,6 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
                 return true;
 
             case R.id.add_widget_menu:
-                Context context = MainActivity.this;
                 Class detActivity = AddWidgetActivity.class;
                 Intent intent = new Intent(getApplicationContext(),detActivity);
                 startActivity(intent);
@@ -265,8 +295,6 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
-
-            String searchResults = null;
             if(newsURL!=null) {
                 new NewsQueryTask().execute(newsURL);
             }
@@ -274,12 +302,12 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
     }
 
      @Override
-    public void onAlertItemClick(int ClickedItemIndex) {
-        Context context = MainActivity.this;
+    public void onAlertItemClick(int ClickedItemIndex, ImageView tumbnail) {
         Class detActivity = ChartActivity.class;
         Intent intent = new Intent(getApplicationContext(),detActivity);
         intent.putExtra(CHART_URL, alertList.get(ClickedItemIndex).getChartURL());
         intent.putExtra(SYMBOL, alertList.get(ClickedItemIndex).getSymbol() + " - " + alertList.get(ClickedItemIndex).getTimeStr());
+        View clickedView = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findViewByPosition(ClickedItemIndex);
         startActivity(intent);
     }
 
@@ -302,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
     }
 
 
-    public class NewsQueryTask extends AsyncTask<URL, Void, String> {
+    public static class NewsQueryTask extends AsyncTask<URL, Void, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -313,7 +341,6 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
             URL searchUrl = urls[0];
             String searchResults = null;
             try {
-
                 HttpURLConnection urlConnection = (HttpURLConnection) searchUrl.openConnection();
                 try {
                     InputStream in = urlConnection.getInputStream();
@@ -356,17 +383,16 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
             }
              catch (IOException e) {
             }
-
         }
     }
 
-    private void processParsing(XmlPullParser parser) throws IOException, XmlPullParserException{
+    private static void processParsing(XmlPullParser parser) throws IOException, XmlPullParserException{
         newsList = new ArrayList<>();
         int eventType = parser.getEventType();
         News current = null;
 
         while (eventType != XmlPullParser.END_DOCUMENT) {
-            String eltName = null;
+            String eltName;
 
             switch (eventType) {
                 case XmlPullParser.START_TAG:
@@ -395,4 +421,9 @@ public class MainActivity extends AppCompatActivity implements AlertAdapter.Aler
         newsAdapter.setNewsData(newsList);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(LIST_STATE_KEY, mListState);
+    }
 }

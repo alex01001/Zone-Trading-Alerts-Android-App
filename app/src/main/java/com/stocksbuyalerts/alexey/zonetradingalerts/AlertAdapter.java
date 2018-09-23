@@ -19,13 +19,13 @@ public class AlertAdapter extends RecyclerView.Adapter <AlertAdapter.MyViewHolde
 
     final private AlertItemClickListener onClickListener;
     private LayoutInflater inflater;
-    List<Alert> data = Collections.emptyList();
+    private List<Alert> data = Collections.emptyList();
     private Context context;
 
     private boolean wideScreen;
 
     public interface AlertItemClickListener {
-        void onAlertItemClick(int ClickedItemIndex);
+        void onAlertItemClick(int ClickedItemIndex, ImageView tumbnail);
     }
 
     public AlertAdapter (Context tContext, AlertItemClickListener listener, boolean tWideScreen){
@@ -49,7 +49,7 @@ public class AlertAdapter extends RecyclerView.Adapter <AlertAdapter.MyViewHolde
         holder.alertDate.setText(current.getTimeStr());
         if(wideScreen) {
             String commpanyName = current.getName();
-            if (commpanyName !=""){
+            if (!commpanyName.equals("")){
                 holder.alertSymbol.setText(Html.fromHtml("<b>"+ current.getSymbol() + "</b> - " + commpanyName));
             }
             else {
@@ -95,7 +95,7 @@ public class AlertAdapter extends RecyclerView.Adapter <AlertAdapter.MyViewHolde
         @Override
         public void onClick(View view) {
             int clickedPosition = getAdapterPosition();
-            onClickListener.onAlertItemClick(clickedPosition);
+            onClickListener.onAlertItemClick(clickedPosition,tumbnail);
         }
 
 

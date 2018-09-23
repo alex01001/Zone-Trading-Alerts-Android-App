@@ -25,7 +25,7 @@
             android:layout_marginStart="8dp"
             android:fontFamily="@font/eczar_medium"
             android:layout_gravity="start|center"
-            android:text="Stocks Recover as Hurricane Impact and Tariffs Loom"
+            android:text=""
             android:textColor="@color/colorText"
             android:textSize="20sp" />
         <TextView
@@ -36,7 +36,7 @@
             android:layout_margin="2dp"
             android:fontFamily="sans-serif-condensed"
             android:maxLines="1"
-            android:text="Fri, 14 Sep 2018 23:19:00"
+            android:text=""
             android:textColor="@color/colorLightGreen"
             android:textSize="14sp" />
         <TextView
@@ -46,7 +46,7 @@
             android:layout_gravity="start"
             android:layout_margin="4dp"
             android:fontFamily="sans-serif-condensed"
-            android:text="The SP 500 index moved higher last week thanks to a recovery in the tech and healthcare stocks and renewed trade talks with China. Despite rising interest rates, the financial sector continued to struggle during the week. Many economists are skeptical that long-term interest rates will rise, while higher mortgage rates could hurt lending volumes."
+            android:text=""
             android:textColor="@color/colorText"
             android:textSize="18sp" />
 

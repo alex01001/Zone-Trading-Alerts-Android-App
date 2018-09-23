@@ -18,10 +18,6 @@ public final class Utils {
 
     public static String loadSymbol(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        String symbolBase64 = prefs.getString(context.getString(R.string.widget_symbol_key), "");
-
-        return symbolBase64;
+        return prefs.getString(context.getString(R.string.widget_symbol_key), "");
     }
-
-
 }

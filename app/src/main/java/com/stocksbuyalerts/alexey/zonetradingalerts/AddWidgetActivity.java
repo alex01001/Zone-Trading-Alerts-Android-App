@@ -22,6 +22,7 @@ import com.stocksbuyalerts.alexey.zonetradingalerts.widget.MyWidgetService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,7 +51,7 @@ public class AddWidgetActivity extends AppCompatActivity {
         String symbol = vSymbol.getText().toString().trim();
         symbol = symbol.toUpperCase();
 
-        if(symbol==""){
+        if(symbol.equals("")){
             tvErrorMessage.setText(R.string.invalidSymbol);
             tvErrorMessage.setVisibility(View.VISIBLE);
             return;
@@ -64,7 +65,6 @@ public class AddWidgetActivity extends AppCompatActivity {
         else{
             tvErrorMessage.setText(R.string.invalidSymbol);
             tvErrorMessage.setVisibility(View.VISIBLE);
-            return;
         }
     }
 
@@ -141,7 +141,7 @@ public class AddWidgetActivity extends AppCompatActivity {
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        NetworkInfo netInfo = Objects.requireNonNull(cm).getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 

@@ -29,10 +29,9 @@
             android:scrollHorizontally="true"
             android:ellipsize="end"
             android:maxEms="5"
-
             android:fontFamily="@font/eczar_medium"
             android:layout_gravity="start|center"
-            android:text="SYMB"
+            android:text=""
             android:textColor="@color/colorText"
             android:textSize="28sp" />
 
@@ -48,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="at $14.86"
+                android:text=""
                 android:maxLines="1"
                 android:fontFamily="@font/eczar_medium"
                 android:layout_marginTop="8dp"
@@ -64,7 +63,7 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="sans-serif-condensed"
                 android:maxLines="1"
-                android:text="Jul 15, 11:23"
+                android:text=""
                 android:textColor="@color/colorText"
                 android:textSize="18sp" />
 

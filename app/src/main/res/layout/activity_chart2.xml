@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    android:background="#222222"
+    android:background="@color/background"
     tools:context=".ChartActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -20,6 +20,7 @@
             android:id="@+id/detail_toolbar"
             android:layout_width="match_parent"
             android:layout_height="36dp"
+
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
@@ -27,7 +28,7 @@
     <WebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#222222"
+        android:background="@color/background"
         android:id="@+id/wv_chart" />
 
 </LinearLayout>

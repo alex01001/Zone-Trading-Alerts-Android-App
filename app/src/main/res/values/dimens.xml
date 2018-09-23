@@ -8,5 +8,7 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="widget_margin">0dp</dimen>
 
     <dimen name="large_thumbnail_width">190dp</dimen>
+    
+    <integer name="animation_dur_medium">1000</integer>
 
 </resources>

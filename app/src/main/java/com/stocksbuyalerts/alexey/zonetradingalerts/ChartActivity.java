@@ -76,6 +76,7 @@ public class ChartActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
+//        myWebView.clearCache(true);
         onBackPressed();
         return true;
     }

@@ -10,8 +10,6 @@
     <string name="addWidget">Add Widget</string>
     <string name="invalidSymbol">Invalid Symbol</string>
     <string name="isOffline">Your device is offline. Please try again later. </string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
     <string name="select_symbol">Select a stock to track</string>
     <string name="widget_symbol_key">widget_symbol_key</string>
     <string name="sba_invite">For more charts visit stocksbuyalerts.com</string>
@@ -21,7 +19,6 @@
     <string name="headlines">Market Headlines</string>
     <string name="mini_chart">Mini Chart</string>
     <string name="menu_add_widget">Add Price Tracking Widget</string>
-    <string name="menu_sign_out">Sign Out</string>
     <string name="share">Share</string>
     <string name="symbol_hint">GOOG</string>
 
