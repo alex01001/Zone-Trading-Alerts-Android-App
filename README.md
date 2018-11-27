@@ -9,3 +9,8 @@ This app sends instant alerts and displays current and historical charts.
 
 
 ![Alt Text](https://github.com/alex01001/Capstone-Project/blob/master/chart.PNG)
+
+
+It was my graduation project for Udacity Android Development Nanodegree Program.
+![Alt Text](https://github.com/alex01001/Zone-Trading-Alerts-Android-App/blob/master/Certificate.PNG)
+
