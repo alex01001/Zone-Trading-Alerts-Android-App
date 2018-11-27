@@ -8,4 +8,4 @@ This app sends instant alerts and displays current and historical charts.
 ![Alt Text](https://github.com/alex01001/Capstone-Project/blob/master/stock_list.gif)
 
 
-![Alt Text](https://github.com/alex01001/Capstone-Project/blob/master/chart.png)
+![Alt Text](https://github.com/alex01001/Capstone-Project/blob/master/chart.PNG)
