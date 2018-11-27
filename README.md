@@ -1,7 +1,6 @@
-# Capstone-Project
+# Zone Trading Alerts Android App
 
-Note for reviewer: I do not include my google-services.json file as it contains API keys.
+Some time ago I’ve created a system which monitors the stock market and sends alerts when it identifies a moment when stock price is about to start growing (you can read more at http://stocksbuyalerts.com/). The system is based on the theory of so-called supply and demand zones. My software recognizes demand zones, assesses the probability of the price growth, and notifies the subscribers. The target audience for these alerts is day traders (people who actively buy and sell stocks within a day), so it is very important that subscribers receive alerts quickly. 
+Currently, the system sends e-mail alerts only. Sometimes, e-mail delivery is delayed by e-mail servers and my subscribers receive alerts too late. That’s why I’ve decided to build an app!
 
-The app itself looks relatively simple, however, there was a lot of back end work:
-- using a third-party web library for charting (I had to build custom modules on JavaScript to load the data for the chart)
-- Python scripts for generating charts in real time, uploading them on the web, creating records in firebase database, and generating notifications. 
+![Alt Text](https://github.com/alex01001/Capstone-Project/blob/master/stock_list.gif)
